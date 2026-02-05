@@ -1,0 +1,38 @@
+# Git
+.git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+Dockerfile-dev
+docker-compose.yml
+docker-compose.yaml
+.dockerignore
+
+# Virtual environment
+.env/
+.venv/
+.venv
+venv/
+
+# Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Special
+README.md
+CHANGELOG.md
+VERSION
+**/.vscode
+**/*.disabled
+**/.venv
+**/.tmp
+**/.archive
+**/.docs
+**/dev
+**/.dev
+**/tests
+**/.tests
+**/.sandbox
