@@ -3,7 +3,7 @@
 VERSION=$(cat VERSION)
 DOCKER_REPOS="vfabi/open-ports-scanner"
 DOCKER_TAGS="$VERSION latest"
-PLATFORMS="linux/amd64"
+PLATFORMS="linux/amd64,linux/arm64"
 DOCKERFILE="Dockerfile"
 
 

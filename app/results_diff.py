@@ -18,7 +18,7 @@ def get_ports_data(filename):
         tree = ET.parse(filename)
         root = tree.getroot()
     except Exception as e:
-        print(f"[RESULTS_DIFF] error, file {filename} parsing XML failed. Details: {e}")
+        print(f"[RESULTS_DIFF] error, file {filename} parsing XML failed. Details: {e}")  #NOTE: will rise an exception for the first run, this is ok.
         return data_map
 
     for host in root.findall("host"):

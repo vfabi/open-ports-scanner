@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: default
+  name: open-ports-scanner-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: default
+  name: open-ports-scanner-config
+data:
+  NMAP_TARGETS: "100.100.100.1,10.11.12.13,22.22.22.22"
+  NMAP_PORTS: "22,80,443"
+  SEND_DIFF_REPORT_TELEGRAM: "true"
+  SEND_REPORT_TELEGRAM: "true"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: default
+  name: open-ports-scanner-secrets
+type: Opaque
+stringData:
+  TELEGRAM_BOT_TOKEN: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
+  TELEGRAM_CHAT_ID: "-1234567890"
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: default
+  name: open-ports-scanner
+spec:
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: main
+              image: vfabi/open-ports-scanner:1.1.0
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: open-ports-scanner-config
+                - secretRef:
+                    name: open-ports-scanner-secrets
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "256Mi"
+                  cpu: "500m"
+              volumeMounts:
+                - mountPath: "/app/data"
+                  name: data-volume
+          restartPolicy: OnFailure
+          volumes:
+            - name: data-volume
+              persistentVolumeClaim:
+                claimName: open-ports-scanner-data
