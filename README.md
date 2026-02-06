@@ -36,7 +36,9 @@ Production ready
 | TELEGRAM_BOT_TOKEN | str | Telegram bot token. Should be specified if `SEND_REPORT_TELEGRAM` or `SEND_DIFF_REPORT_TELEGRAM` is "true". | False | | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |
 | TELEGRAM_CHAT_ID | str | Telegram chat ID. Should be specified if `SEND_REPORT_TELEGRAM` or `SEND_DIFF_REPORT_TELEGRAM` is "true". | False | | `-1234567890` |
 
-### Docker examples
+### Docker environment
+
+For a Docker environment, use the following commands:
 
 ```shell
 
@@ -52,6 +54,10 @@ docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.1
 # with telegram notifications, send always (open ports report and open ports changes report)
 docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.11.12.13,22.22.22.22" -e NMAP_PORTS="22,80,443" -e SEND_DIFF_REPORT_TELEGRAM="true" -e SEND_REPORT_TELEGRAM="true" -e TELEGRAM_BOT_TOKEN="1234567890:AABBCc1234567890nVoluqEOZXCzxc" -e TELEGRAM_CHAT_ID="-1234567890" vfabi/open-ports-scanner:latest open-ports-scanner
 ```
+
+### Kubernetes environment
+
+To deploy on Kubernetes, update and apply the manifest at `deploy/kubernetes/main.yaml`
 
 ## Docker
 
