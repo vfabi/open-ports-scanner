@@ -57,7 +57,10 @@ docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.1
 
 ### Kubernetes environment
 
-To deploy on Kubernetes, update and apply the manifest at `deploy/kubernetes/main.yaml`
+There are 2 options to deploy on Kubernetes:
+
+1. Update and apply the yaml manifest at `deploy/kubernetes/yaml/main.yaml`
+2. Update and apply the helm chart at `deploy/kubernetes/helm`
 
 ## Docker
 
