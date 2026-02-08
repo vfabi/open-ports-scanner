@@ -1,0 +1,57 @@
+# Image
+image:
+  repository: vfabi/open-ports-scanner
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# CronJob
+cronjob:
+  # Schedule in cron format (default: every 6 hours)
+  schedule: "0 */6 * * *"
+  # Concurrency policy: Allow, Forbid, or Replace
+  concurrencyPolicy: Forbid
+  # Number of successful finished jobs to retain
+  successfulJobsHistoryLimit: 3
+  # Number of failed finished jobs to retain
+  failedJobsHistoryLimit: 1
+  # Restart policy for the job pods
+  restartPolicy: OnFailure
+
+# Configuration
+config:
+  # Comma-separated list of IP addresses to scan
+  nmapTargets: "100.100.100.1,10.11.12.13,22.22.22.22"
+  # Comma-separated list of ports to scan
+  nmapPorts: "22,80,443"
+  # Send differential (new open ports) report to Telegram
+  sendDiffReportTelegram: "true"
+  # Send full (all open ports) report to Telegram
+  sendReportTelegram: "true"
+
+# Secrets
+secrets:
+  # Telegram bot token for notifications. Mandatory if sendReportTelegram or sendDiffReportTelegram is "true"
+  telegramBotToken: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
+  # Telegram chat ID to send notifications to. Mandatory if sendReportTelegram or sendDiffReportTelegram is "true"
+  telegramChatId: "-1234567890"
+
+# Resources
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+# Persistent volume
+persistence:
+  enabled: true
+  # Storage class name (leave empty for default)
+  storageClassName: ""
+  # Access mode
+  accessMode: ReadWriteOnce
+  # Storage size
+  size: 1Gi
+  # Mount path in the container
+  mountPath: /app/data

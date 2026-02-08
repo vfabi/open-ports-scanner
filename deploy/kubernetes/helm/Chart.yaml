@@ -1,0 +1,14 @@
+apiVersion: v2
+name: open-ports-scanner
+description: A helm chart for open ports scanner - automated network open ports scanning with Telegram notifications
+type: application
+version: 1.0.0
+appVersion: "latest"
+kubeVersion: '>=1.25.0'
+keywords:
+  - security
+  - monitoring
+  - nmap
+  - port-scanner
+maintainers:
+  - name: vfabi

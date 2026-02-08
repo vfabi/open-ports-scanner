@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "open-ports-scanner.fullname" . }}
+  labels:
+    {{- include "open-ports-scanner.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.cronjob.schedule | quote }}
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "open-ports-scanner.selectorLabels" . | nindent 12 }}
+        spec:
+          containers:
+            - name: main
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "open-ports-scanner.fullname" . }}
+                - secretRef:
+                    name: {{ include "open-ports-scanner.fullname" . }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              {{- if .Values.persistence.enabled }}
+              volumeMounts:
+                - mountPath: {{ .Values.persistence.mountPath }}
+                  name: data-volume
+              {{- end }}
+          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          {{- if .Values.persistence.enabled }}
+          volumes:
+            - name: data-volume
+              persistentVolumeClaim:
+                claimName: {{ include "open-ports-scanner.fullname" . }}
+          {{- end }}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "open-ports-scanner.fullname" . }}
+  labels:
+    {{- include "open-ports-scanner.labels" . | nindent 4 }}
+data:
+  NMAP_TARGETS: {{ .Values.config.nmapTargets | quote }}
+  NMAP_PORTS: {{ .Values.config.nmapPorts | quote }}
+  SEND_DIFF_REPORT_TELEGRAM: {{ .Values.config.sendDiffReportTelegram | quote }}
+  SEND_REPORT_TELEGRAM: {{ .Values.config.sendReportTelegram | quote }}
