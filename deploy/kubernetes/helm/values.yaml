@@ -1,7 +1,7 @@
 # Image
 image:
   repository: vfabi/open-ports-scanner
-  tag: "latest"
+  tag: "1.2.0"
   pullPolicy: IfNotPresent
 
 # CronJob

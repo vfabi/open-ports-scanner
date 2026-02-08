@@ -25,6 +25,8 @@ __pycache__/
 README.md
 CHANGELOG.md
 VERSION
+.pre-commit-config.yaml
+deploy
 **/.vscode
 **/*.disabled
 **/.venv
