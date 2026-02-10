@@ -24,9 +24,11 @@ __pycache__/
 # Special
 README.md
 CHANGELOG.md
+TODO.md
 VERSION
 .pre-commit-config.yaml
 deploy
+.githubdata
 **/.vscode
 **/*.disabled
 **/.venv
