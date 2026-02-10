@@ -2,3 +2,4 @@
 .vscode/*
 .tmp/*
 .pre-commit-config.yaml
+TODO.md

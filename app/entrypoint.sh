@@ -32,7 +32,7 @@ results_report () {
     # Parse Nmap results xml file and prepare open ports report as file ($RESULT_FILE) and to stdout.
     # Report file can be send to Telegram (SEND_REPORT_TELEGRAM="true").
     echo -e "\n---------------------------------------------------"
-    echo "[RESULTS_REPORT] scan results (open ports) report:"
+    echo "[RESULTS_REPORT] open ports report:"
     echo "---------------------------------------------------"
     python3 results_parser.py $RESULT_FILE
     echo "---------------------------------------------------"
@@ -46,14 +46,14 @@ results_diff_report () {
     # Parse Nmap 2 results xml files (old and current) and prepare new open ports report as file ($RESULT_FILE_OPEN_DIFF) and to stdout.
     # Report file can be send to Telegram (SEND_DIFF_REPORT_TELEGRAM="true").
     echo -e "\n---------------------------------------------------"
-    echo "[RESULTS_DIFF_REPORT] changes (new open ports) report:"
+    echo "[RESULTS_DIFF_REPORT] new open ports report:"
     echo "---------------------------------------------------"
     PREVIOUS_RESULT_FILE=$(ls $DATA_FOLDER | grep xml)
     python3 results_diff.py $DATA_FOLDER/$PREVIOUS_RESULT_FILE $RESULT_FILE
     if [ -s "$RESULT_FILE_OPEN_DIFF" ]; then
         echo "---------------------------------------------------"
         if [ "$SEND_DIFF_REPORT_TELEGRAM" == "true" ]; then
-            curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" -d parse_mode="HTML" --data-urlencode "text=<b>$APP_NAME ($APP_VERSION) 🟠 WARNING</b>"$'\n\n'"<b>Message:</b> Open ports changes (new open ports) report"$'\n'"<pre>$(cat $RESULT_FILE_OPEN_DIFF)</pre>"
+            curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" -d parse_mode="HTML" --data-urlencode "text=<b>$APP_NAME ($APP_VERSION) 🟠 WARNING</b>"$'\n\n'"<b>Message:</b> New open ports report"$'\n'"<pre>$(cat $RESULT_FILE_OPEN_DIFF)</pre>"
             echo -e "\n---------------------------------------------------"
         fi
     fi
