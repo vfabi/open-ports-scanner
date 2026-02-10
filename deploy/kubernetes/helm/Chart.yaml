@@ -3,7 +3,7 @@ name: open-ports-scanner
 description: A helm chart for open ports scanner - automated network open ports scanning with Telegram notifications
 type: application
 version: 1.0.0
-appVersion: "1.2.0"
+appVersion: "1.3.0"
 kubeVersion: '>=1.25.0'
 keywords:
   - security
