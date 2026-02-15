@@ -1,3 +1,15 @@
+## [1.4.0] - 2026-02-15
+
+### Added
+
+- Dedicated Telegram chat id for the new open ports report
+
+### Changed
+
+- Updated container security configuration
+
+### Fixed
+
 ## [1.3.0] - 2026-02-10
 
 ### Added

@@ -10,6 +10,7 @@
 
 Open ports scanner application based on Nmap.  
 Designed for periodic scanning of open ports with notifications in Telegram: it provides a report on all found open ports or only on changes (newly opened ports).  
+Run in Kubernetes environment using CronJob, but can be run as a standalone docker application.
 
 ![Open ports report](.githubdata/1.png)
 
@@ -19,6 +20,7 @@ Production ready
 
 ## Features
 
+- Periodic runs using Kubernetes CronJob.
 - Scan specified ports using Nmap. Specified ports will be scanned as TCP and UDP.
 - Configure the list of ports and targets for scanning through environment variables.
 - Generate a report of open ports to standard output (stdout).
@@ -33,10 +35,11 @@ Production ready
 | --- | --- | --- | --- | --- | --- |
 | NMAP_TARGETS | str | Nmap targets (IP addresses or domains) to scan. | True | | `100.100.100.1,10.11.12.13,22.22.22.22` |
 | NMAP_PORTS | str | Nmap ports to scan. Specified ports will be scanned as TCP and UDP. If not specified, it will scan top 1000 ports. | False | | `22,80,443` |
-| SEND_REPORT_TELEGRAM | bool/str | Send open ports report to Telegram. | False | | `true` |
-| SEND_DIFF_REPORT_TELEGRAM | bool/str | Send new open ports report to Telegram. | False | | `true` |
-| TELEGRAM_BOT_TOKEN | str | Telegram bot token. Should be specified if `SEND_REPORT_TELEGRAM` or `SEND_DIFF_REPORT_TELEGRAM` is "true". | False | | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |
-| TELEGRAM_CHAT_ID | str | Telegram chat ID. Should be specified if `SEND_REPORT_TELEGRAM` or `SEND_DIFF_REPORT_TELEGRAM` is "true". | False | | `-1234567890` |
+| SEND_REPORT_OPENPORTS_TELEGRAM | bool/str | Send open ports report to Telegram. | False | | `true` |
+| SEND_REPORT_NEWOPENPORTS_TELEGRAM | bool/str | Send new open ports (changes) report to Telegram. | False | | `true` |
+| TELEGRAM_BOT_TOKEN | str | Telegram bot token. Should be specified if `SEND_REPORT_OPENPORTS_TELEGRAM` or `SEND_REPORT_NEWOPENPORTS_TELEGRAM` is "true". | False* | | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |
+| TELEGRAM_CHAT_ID_OPENPORTS_REPORT | str | Telegram chat ID for open ports report. Should be specified if `SEND_REPORT_OPENPORTS_TELEGRAM` is "true". | False* | | `-1234567890` |
+| TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT | str | Telegram chat ID for new open ports report. Should be specified if `SEND_REPORT_NEWOPENPORTS_TELEGRAM` is "true". | False* | | `-234567891` |
 
 ### Docker environment
 
@@ -50,11 +53,11 @@ docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.1
 # with ports specified
 docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.11.12.13,22.22.22.22" -e NMAP_PORTS="22,80,443" vfabi/open-ports-scanner:latest open-ports-scanner
 
-# with telegram notifications, send only if there are open ports changes (newly opened ports)
-docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.11.12.13,22.22.22.22" -e NMAP_PORTS="22,80,443" -e SEND_DIFF_REPORT_TELEGRAM="true" -e TELEGRAM_BOT_TOKEN="1234567890:AABBCc1234567890nVoluqEOZXCzxc" -e TELEGRAM_CHAT_ID="-1234567890" vfabi/open-ports-scanner:latest open-ports-scanner
+# with telegram notifications, send only if there are open ports changes - new open ports report
+docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.11.12.13,22.22.22.22" -e NMAP_PORTS="22,80,443" -e SEND_REPORT_NEWOPENPORTS_TELEGRAM="true" -e TELEGRAM_BOT_TOKEN="1234567890:AABBCc1234567890nVoluqEOZXCzxc" -e TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT="-234567891" vfabi/open-ports-scanner:latest open-ports-scanner
 
-# with telegram notifications, send open ports report and open ports changes report
-docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.11.12.13,22.22.22.22" -e NMAP_PORTS="22,80,443" -e SEND_DIFF_REPORT_TELEGRAM="true" -e SEND_REPORT_TELEGRAM="true" -e TELEGRAM_BOT_TOKEN="1234567890:AABBCc1234567890nVoluqEOZXCzxc" -e TELEGRAM_CHAT_ID="-1234567890" vfabi/open-ports-scanner:latest open-ports-scanner
+# with telegram notifications, send open ports report and new open ports report
+docker run --rm -it -v $(pwd)/data:/app/data -e NMAP_TARGETS="100.100.100.1,10.11.12.13,22.22.22.22" -e NMAP_PORTS="22,80,443" -e SEND_REPORT_NEWOPENPORTS_TELEGRAM="true" -e SEND_REPORT_OPENPORTS_TELEGRAM="true" -e TELEGRAM_BOT_TOKEN="1234567890:AABBCc1234567890nVoluqEOZXCzxc" -e TELEGRAM_CHAT_ID_OPENPORTS_REPORT="-1234567890" -e TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT="-234567891" vfabi/open-ports-scanner:latest open-ports-scanner
 ```
 
 ### Kubernetes environment

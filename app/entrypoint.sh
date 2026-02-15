@@ -13,9 +13,16 @@ if [ -z "$NMAP_TARGETS" ]; then
     exit 1
 fi
 
-if [ "$SEND_REPORT_TELEGRAM" == "true" ] || [ "$SEND_DIFF_REPORT_TELEGRAM" == "true" ]; then
-    if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
-        echo "[ERROR] send report to Telegram enabled, but not specified TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID variable"
+if [ "$SEND_REPORT_OPENPORTS_TELEGRAM" == "true" ]; then
+    if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID_OPENPORTS_REPORT" ]; then
+        echo "[ERROR] send open ports report to Telegram enabled, but not specified TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID_OPENPORTS_REPORT variable."
+        exit 1
+    fi
+fi
+
+if [ "$SEND_REPORT_NEWOPENPORTS_TELEGRAM" == "true" ]; then
+    if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT" ]; then
+        echo "[ERROR] send new open ports report to Telegram enabled, but not specified TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT variable."
         exit 1
     fi
 fi
@@ -30,21 +37,22 @@ NMAP_CMD="$NMAP_CMD $NMAP_TARGETS_FIXED"
 
 results_report () {
     # Parse Nmap results xml file and prepare open ports report as file ($RESULT_FILE) and to stdout.
-    # Report file can be send to Telegram (SEND_REPORT_TELEGRAM="true").
+    # Report file can be send to Telegram (SEND_REPORT_OPENPORTS_TELEGRAM="true").
     echo -e "\n---------------------------------------------------"
     echo "[RESULTS_REPORT] open ports report:"
     echo "---------------------------------------------------"
     python3 results_parser.py $RESULT_FILE
     echo "---------------------------------------------------"
-    if [ "$SEND_REPORT_TELEGRAM" == "true" ]; then
-        curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" -d parse_mode="HTML" --data-urlencode "text=<b>$APP_NAME ($APP_VERSION) 🟢 INFO</b>"$'\n\n'"<b>Message:</b> Open ports report"$'\n'"<pre>$(cat $RESULT_FILE_OPEN)</pre>"
+    if [ "$SEND_REPORT_OPENPORTS_TELEGRAM" == "true" ]; then
+        echo "Sending open ports report to Telegram:"
+        curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID_OPENPORTS_REPORT" -d parse_mode="HTML" --data-urlencode "text=<b>$APP_NAME ($APP_VERSION) 🟢 INFO</b>"$'\n\n'"<b>Message:</b> Open ports report"$'\n'"<pre>$(cat $RESULT_FILE_OPEN)</pre>"
         echo -e "\n---------------------------------------------------"
     fi
 }
 
 results_diff_report () {
     # Parse Nmap 2 results xml files (old and current) and prepare new open ports report as file ($RESULT_FILE_OPEN_DIFF) and to stdout.
-    # Report file can be send to Telegram (SEND_DIFF_REPORT_TELEGRAM="true").
+    # Report file can be send to Telegram (SEND_REPORT_NEWOPENPORTS_TELEGRAM="true").
     echo -e "\n---------------------------------------------------"
     echo "[RESULTS_DIFF_REPORT] new open ports report:"
     echo "---------------------------------------------------"
@@ -52,8 +60,9 @@ results_diff_report () {
     python3 results_diff.py $DATA_FOLDER/$PREVIOUS_RESULT_FILE $RESULT_FILE
     if [ -s "$RESULT_FILE_OPEN_DIFF" ]; then
         echo "---------------------------------------------------"
-        if [ "$SEND_DIFF_REPORT_TELEGRAM" == "true" ]; then
-            curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" -d parse_mode="HTML" --data-urlencode "text=<b>$APP_NAME ($APP_VERSION) 🟠 WARNING</b>"$'\n\n'"<b>Message:</b> New open ports report"$'\n'"<pre>$(cat $RESULT_FILE_OPEN_DIFF)</pre>"
+        if [ "$SEND_REPORT_NEWOPENPORTS_TELEGRAM" == "true" ]; then
+            echo "Sending new open ports report to Telegram:"
+            curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT" -d parse_mode="HTML" --data-urlencode "text=<b>$APP_NAME ($APP_VERSION) 🟠 WARNING</b>"$'\n\n'"<b>Message:</b> New open ports report"$'\n'"<pre>$(cat $RESULT_FILE_OPEN_DIFF)</pre>"
             echo -e "\n---------------------------------------------------"
         fi
     fi
