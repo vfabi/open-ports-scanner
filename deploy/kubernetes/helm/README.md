@@ -13,7 +13,7 @@ This helm chart deploys the open ports scanner application as a Kubernetes CronJ
 To install the chart with the release name `my-scanner`:
 
 ```bash
-helm install my-scanner ./deploy/helm/open-ports-scanner --namespace example --create-namespace
+helm install my-scanner ./deploy/kubernetes/helm --namespace example --create-namespace
 ```
 
 ## Uninstall
@@ -37,12 +37,6 @@ The following table lists the configurable parameters of the chart and their def
 | `cronjob.concurrencyPolicy` | Concurrency policy | `Forbid` |
 | `cronjob.successfulJobsHistoryLimit` | Successful jobs to retain | `3` |
 | `cronjob.failedJobsHistoryLimit` | Failed jobs to retain | `1` |
-| `config.nmapTargets` | Comma-separated IP addresses to scan | `100.100.100.1,10.11.12.13,22.22.22.22` |
-| `config.nmapPorts` | Comma-separated ports to scan | `22,80,443` |
-| `config.sendDiffReportTelegram` | Send differential (new open ports) report to Telegram | `true` |
-| `config.sendReportTelegram` | Send full (all open ports) report to Telegram | `true` |
-| `secrets.telegramBotToken` | Telegram bot token | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |
-| `secrets.telegramChatId` | Telegram chat ID | `-1234567890` |
 | `resources.requests.memory` | Memory request | `128Mi` |
 | `resources.requests.cpu` | CPU request | `100m` |
 | `resources.limits.memory` | Memory limit | `256Mi` |
@@ -52,10 +46,17 @@ The following table lists the configurable parameters of the chart and their def
 | `persistence.accessMode` | Access mode | `ReadWriteOnce` |
 | `persistence.size` | Storage size | `1Gi` |
 | `persistence.mountPath` | Mount path in container | `/app/data` |
+| `config.nmapTargets` | Comma-separated IP addresses to scan | `100.100.100.1,10.11.12.13,22.22.22.22` |
+| `config.nmapPorts` | Comma-separated ports to scan | `22,80,443` |
+| `config.sendReportOpenPortsTelegram` | Send open ports report to Telegram | `true` |
+| `config.sendReportNewOpenPortsTelegram` | Send new open ports (changes) report to Telegram | `true` |
+| `secrets.telegramBotToken` | Telegram bot token | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |
+| `secrets.telegramChatIdOpenPortsReport` | Telegram chat ID for open ports report | `-1234567890` |
+| `secrets.telegramChatIdNewOpenPortsReport` | Telegram chat ID for new open ports report | `-234567891` |
 
 ## Custom values example
 
-Create a `custom-values.yaml` file:
+Create a `custom-values.yaml` file. For example:
 
 ```yaml
 cronjob:
@@ -64,16 +65,19 @@ cronjob:
 config:
   nmapTargets: "192.168.1.1,192.168.1.10"
   nmapPorts: "22,80,443,8080"
+  sendReportOpenPortsTelegram: "true"
+  sendReportNewOpenPortsTelegram: "true"
 
 secrets:
-  telegramBotToken: "your-actual-telegram-bot-token"
-  telegramChatId: "your-actual-telegram-chat-id"
+  telegramBotToken: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
+  telegramChatIdOpenPortsReport: "-1234567890"
+  telegramChatIdNewOpenPortsReport: "-234567891"  
 ```
 
 Then install with:
 
 ```bash
-helm install my-scanner ./deploy/helm/open-ports-scanner -f custom-values.yaml --namespace example --create-namespace
+helm install my-scanner ./deploy/kubernetes/helm -f custom-values.yaml --namespace example --create-namespace
 ```
 
 ## Upgrade
@@ -81,7 +85,7 @@ helm install my-scanner ./deploy/helm/open-ports-scanner -f custom-values.yaml -
 To upgrade the release with new values:
 
 ```bash
-helm upgrade my-scanner ./deploy/helm/open-ports-scanner -f custom-values.yaml --namespace example --create-namespace
+helm upgrade my-scanner ./deploy/kubernetes/helm -f custom-values.yaml --namespace example --create-namespace
 ```
 
 ## Testing
@@ -89,11 +93,11 @@ helm upgrade my-scanner ./deploy/helm/open-ports-scanner -f custom-values.yaml -
 To test the chart rendering without installing:
 
 ```bash
-helm template my-scanner ./deploy/helm/open-ports-scanner --debug
+helm template my-scanner ./deploy/kubernetes/helm --debug
 ```
 
 To validate the chart:
 
 ```bash
-helm lint ./deploy/helm/open-ports-scanner
+helm lint ./deploy/kubernetes/helm
 ```

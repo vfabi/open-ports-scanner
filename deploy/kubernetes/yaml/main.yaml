@@ -20,8 +20,8 @@ metadata:
 data:
   NMAP_TARGETS: "100.100.100.1,10.11.12.13,22.22.22.22"
   NMAP_PORTS: "22,80,443"
-  SEND_DIFF_REPORT_TELEGRAM: "true"
-  SEND_REPORT_TELEGRAM: "true"
+  SEND_REPORT_NEWOPENPORTS_TELEGRAM: "true"
+  SEND_REPORT_OPENPORTS_TELEGRAM: "false"
 
 ---
 apiVersion: v1
@@ -32,7 +32,8 @@ metadata:
 type: Opaque
 stringData:
   TELEGRAM_BOT_TOKEN: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
-  TELEGRAM_CHAT_ID: "-1234567890"
+  TELEGRAM_CHAT_ID_OPENPORTS_REPORT: "-1234567890"
+  TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT: "-234567891"
 
 ---
 apiVersion: batch/v1
@@ -53,6 +54,9 @@ spec:
             - name: main
               image: vfabi/open-ports-scanner:1.3.0
               imagePullPolicy: IfNotPresent
+              securityContext:
+                allowPrivilegeEscalation: false
+                privileged: false
               envFrom:
                 - configMapRef:
                     name: open-ports-scanner-config
@@ -68,6 +72,11 @@ spec:
               volumeMounts:
                 - mountPath: "/app/data"
                   name: data-volume
+          enableServiceLinks: false
+          automountServiceAccountToken: false
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
           restartPolicy: OnFailure
           volumes:
             - name: data-volume

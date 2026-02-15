@@ -8,5 +8,6 @@ metadata:
 data:
   NMAP_TARGETS: {{ .Values.config.nmapTargets | quote }}
   NMAP_PORTS: {{ .Values.config.nmapPorts | quote }}
-  SEND_DIFF_REPORT_TELEGRAM: {{ .Values.config.sendDiffReportTelegram | quote }}
-  SEND_REPORT_TELEGRAM: {{ .Values.config.sendReportTelegram | quote }}
+  SEND_REPORT_OPENPORTS_TELEGRAM: {{ .Values.config.sendReportOpenPortsTelegram | quote }}
+  SEND_REPORT_NEWOPENPORTS_TELEGRAM: {{ .Values.config.sendReportNewOpenPortsTelegram | quote }}
+  
