@@ -3,7 +3,7 @@ FROM alpine:3.23.3
 LABEL maintainer="Vadim Fabi <vaad.fabi@gmail.com>"
 ARG TARGETARCH
 ARG APP_NAME=open-ports-scanner
-ARG APP_VERSION=1.3.0
+ARG APP_VERSION=1.4.0
 ENV APP_NAME=${APP_NAME}
 ENV APP_VERSION=${APP_VERSION}
 
