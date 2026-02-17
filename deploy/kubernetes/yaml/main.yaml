@@ -52,7 +52,7 @@ spec:
         spec:
           containers:
             - name: main
-              image: vfabi/open-ports-scanner:1.3.0
+              image: vfabi/open-ports-scanner:1.4.1
               imagePullPolicy: IfNotPresent
               securityContext:
                 allowPrivilegeEscalation: false
