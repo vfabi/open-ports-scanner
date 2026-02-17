@@ -8,27 +8,11 @@ This helm chart deploys the open ports scanner application as a Kubernetes CronJ
 - Helm 3.0+
 - PersistentVolume provisioner support in the underlying infrastructure (if persistence is enabled)
 
-## Install
+## Values
 
-To install the chart with the release name `my-scanner`:
+The following table lists the configurable values of the chart and their defaults.
 
-```bash
-helm install my-scanner ./deploy/kubernetes/helm --namespace example --create-namespace
-```
-
-## Uninstall
-
-To uninstall/delete the `my-scanner` deployment:
-
-```bash
-helm uninstall my-scanner --namespace example 
-```
-
-## Configuration
-
-The following table lists the configurable parameters of the chart and their default values.
-
-| Parameter | Description | Default |
+| Key | Description | Default |
 | ----------- | ----------- | ----------- |
 | `image.repository` | Image repository | `vfabi/open-ports-scanner` |
 | `image.tag` | Image tag | `latest` |
@@ -46,15 +30,23 @@ The following table lists the configurable parameters of the chart and their def
 | `persistence.accessMode` | Access mode | `ReadWriteOnce` |
 | `persistence.size` | Storage size | `1Gi` |
 | `persistence.mountPath` | Mount path in container | `/app/data` |
-| `config.nmapTargets` | Comma-separated IP addresses to scan | `100.100.100.1,10.11.12.13,22.22.22.22` |
-| `config.nmapPorts` | Comma-separated ports to scan | `22,80,443` |
-| `config.sendReportOpenPortsTelegram` | Send open ports report to Telegram | `true` |
-| `config.sendReportNewOpenPortsTelegram` | Send new open ports (changes) report to Telegram | `true` |
-| `secrets.telegramBotToken` | Telegram bot token | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |
-| `secrets.telegramChatIdOpenPortsReport` | Telegram chat ID for open ports report | `-1234567890` |
-| `secrets.telegramChatIdNewOpenPortsReport` | Telegram chat ID for new open ports report | `-234567891` |
+| `config.nmapTargets` | Comma-separated Nmap targets (IP addresses or domains) to scan | `""` (required) |
+| `config.nmapPorts` | Comma-separated Nmap ports to scan | `""` |
+| `config.sendReportOpenPortsTelegram` | Send open ports report to Telegram | `""` |
+| `config.sendReportNewOpenPortsTelegram` | Send new open ports (changes) report to Telegram | `""` |
+| `secrets.telegramBotToken` | Telegram bot token | `""` |
+| `secrets.telegramChatIdOpenPortsReport` | Telegram chat ID for open ports report | `""` |
+| `secrets.telegramChatIdNewOpenPortsReport` | Telegram chat ID for new open ports report | `""` |
 
-## Custom values example
+## Install
+
+To install the chart with the release name `my-scanner` in the `example` namespace:
+
+```bash
+helm install my-scanner ./deploy/kubernetes/helm --namespace example --create-namespace
+```
+
+## Install (with custom values.yaml)
 
 Create a `custom-values.yaml` file. For example:
 
@@ -80,24 +72,40 @@ Then install with:
 helm install my-scanner ./deploy/kubernetes/helm -f custom-values.yaml --namespace example --create-namespace
 ```
 
-## Upgrade
-
-To upgrade the release with new values:
+## Uninstall
 
 ```bash
-helm upgrade my-scanner ./deploy/kubernetes/helm -f custom-values.yaml --namespace example --create-namespace
+helm uninstall my-scanner --namespace example 
+```
+
+## Upgrade
+
+```bash
+helm upgrade my-scanner ./deploy/kubernetes/helm -f custom-values.yaml --namespace example
 ```
 
 ## Testing
 
-To test the chart rendering without installing:
+Template rendering:
 
 ```bash
 helm template my-scanner ./deploy/kubernetes/helm --debug
 ```
 
-To validate the chart:
+Template rendering with custom values:
+
+```bash
+helm template my-scanner ./deploy/kubernetes/helm -f custom-values.yaml --debug
+```
+
+Linting:
 
 ```bash
 helm lint ./deploy/kubernetes/helm
+```
+
+Test installation (without actual deployment):
+
+```bash
+helm install my-scanner ./deploy/kubernetes/helm --dry-run --debug
 ```

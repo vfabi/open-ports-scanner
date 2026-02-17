@@ -8,8 +8,7 @@
 ![Docker Version](https://img.shields.io/docker/v/vfabi/open-ports-scanner)
 ![Docker Pulls](https://img.shields.io/docker/pulls/vfabi/open-ports-scanner)
 
-Open ports scanner application based on Nmap.  
-Designed for periodic scanning of open ports with notifications in Telegram: it provides a report on all found open ports or only on changes (newly opened ports).  
+Open ports scanner application based on Nmap. Designed for periodic scanning of open ports with notifications in Telegram: it provides a report on all found open ports or only on changes (newly opened ports).  
 Run in Kubernetes environment using CronJob, but can be run as a standalone docker application.
 
 ![Open ports report](.githubdata/1.png)
@@ -33,8 +32,8 @@ Production ready
 
 | Name | Type | Description | Mandatory | Default | Example |
 | --- | --- | --- | --- | --- | --- |
-| NMAP_TARGETS | str | Nmap targets (IP addresses or domains) to scan. | True | | `100.100.100.1,10.11.12.13,22.22.22.22` |
-| NMAP_PORTS | str | Nmap ports to scan. Specified ports will be scanned as TCP and UDP. If not specified, it will scan top 1000 ports. | False | | `22,80,443` |
+| NMAP_TARGETS | str | Comma-separated Nmap targets (IP addresses or domains) to scan. | True | | `100.100.100.1,10.11.12.13,22.22.22.22` |
+| NMAP_PORTS | str | Comma-separated Nmap ports to scan. Specified ports will be scanned as TCP and UDP. If not specified, it will scan top 1000 ports. | False | | `22,80,443` |
 | SEND_REPORT_OPENPORTS_TELEGRAM | bool/str | Send open ports report to Telegram. | False | | `true` |
 | SEND_REPORT_NEWOPENPORTS_TELEGRAM | bool/str | Send new open ports (changes) report to Telegram. | False | | `true` |
 | TELEGRAM_BOT_TOKEN | str | Telegram bot token. Should be specified if `SEND_REPORT_OPENPORTS_TELEGRAM` or `SEND_REPORT_NEWOPENPORTS_TELEGRAM` is "true". | False* | | `1234567890:AABBCc1234567890nVoluqEOZXCzxc` |

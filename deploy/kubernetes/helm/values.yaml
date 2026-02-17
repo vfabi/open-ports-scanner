@@ -1,3 +1,6 @@
+nameOverride: ""
+fullnameOverride: ""
+
 # Image
 image:
   repository: vfabi/open-ports-scanner
@@ -19,23 +22,23 @@ cronjob:
 
 # Configuration
 config:
-  # Comma-separated list of IP addresses to scan
-  nmapTargets: "#PLACEHOLDER:nmapTargets#"
-  # Comma-separated list of ports to scan
-  nmapPorts: "#PLACEHOLDER:nmapPorts#"
-  # Send open ports report to Telegram
-  sendReportOpenPortsTelegram: "#PLACEHOLDER:sendReportOpenPortsTelegram#"  
-  # Send new open ports report to Telegram
-  sendReportNewOpenPortsTelegram: "#PLACEHOLDER:sendReportNewOpenPortsTelegram#"
+  # Comma-separated list of IP addresses to scan. MANDATORY. Example: "100.100.100.1,10.11.12.13,22.22.22.22"
+  nmapTargets: ""
+  # Comma-separated list of ports to scan. Example: "22,80,443"
+  nmapPorts: ""
+  # Send open ports report to Telegram. Example: "true"
+  sendReportOpenPortsTelegram: ""  
+  # Send new open ports report to Telegram. Example: "true"
+  sendReportNewOpenPortsTelegram: ""
 
 # Secrets
 secrets:
-  # Telegram bot token to send reports. Mandatory if sendReportOpenPortsTelegram or sendReportNewOpenPortsTelegram is "true"
-  telegramBotToken: "#PLACEHOLDER:telegramBotToken#"
-  # Telegram chat ID to send open ports report. Mandatory if sendReportOpenPortsTelegram is "true"
-  telegramChatIdOpenPortsReport: "#PLACEHOLDER:telegramChatIdOpenPortsReport#"
-  # Telegram chat ID to send new open ports report. Mandatory if sendReportNewOpenPortsTelegram is "true"
-  telegramChatIdNewOpenPortsReport: "#PLACEHOLDER:telegramChatIdNewOpenPortsReport#"
+  # Telegram bot token to send reports. Mandatory if sendReportOpenPortsTelegram or sendReportNewOpenPortsTelegram is "true". Example: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
+  telegramBotToken: ""
+  # Telegram chat ID to send open ports report. Mandatory if sendReportOpenPortsTelegram is "true". Example: "-1234567890"
+  telegramChatIdOpenPortsReport: ""
+  # Telegram chat ID to send new open ports report. Mandatory if sendReportNewOpenPortsTelegram is "true". Example: "-1234567890"
+  telegramChatIdNewOpenPortsReport: ""
 
 # Resources
 resources:

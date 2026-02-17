@@ -18,10 +18,10 @@ metadata:
   namespace: default
   name: open-ports-scanner-config
 data:
-  NMAP_TARGETS: "100.100.100.1,10.11.12.13,22.22.22.22"
-  NMAP_PORTS: "22,80,443"
-  SEND_REPORT_NEWOPENPORTS_TELEGRAM: "true"
-  SEND_REPORT_OPENPORTS_TELEGRAM: "false"
+  NMAP_TARGETS: "" # Comma-separated Nmap targets (IP addresses or domains) to scan. MANDATORY. Example: "100.100.100.1,10.11.12.13,22.22.22.22"
+  NMAP_PORTS: "" # Comma-separated Nmap ports to scan. Example: "22,80,443"
+  SEND_REPORT_OPENPORTS_TELEGRAM: "" # Send open ports report to Telegram. Example: "true"
+  SEND_REPORT_NEWOPENPORTS_TELEGRAM: "" # Send new open ports (changes) report to Telegram. Example: "true"
 
 ---
 apiVersion: v1
@@ -31,9 +31,9 @@ metadata:
   name: open-ports-scanner-secrets
 type: Opaque
 stringData:
-  TELEGRAM_BOT_TOKEN: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
-  TELEGRAM_CHAT_ID_OPENPORTS_REPORT: "-1234567890"
-  TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT: "-234567891"
+  TELEGRAM_BOT_TOKEN: "" # Telegram bot token. Should be specified if `SEND_REPORT_OPENPORTS_TELEGRAM` or `SEND_REPORT_NEWOPENPORTS_TELEGRAM` is "true". Example: "1234567890:AABBCc1234567890nVoluqEOZXCzxc"
+  TELEGRAM_CHAT_ID_OPENPORTS_REPORT: "" # Telegram chat ID for open ports report. Should be specified if `SEND_REPORT_OPENPORTS_TELEGRAM` is "true". Example: "-1234567890"
+  TELEGRAM_CHAT_ID_NEWOPENPORTS_REPORT: "" # Telegram chat ID for new open ports (changes) report. Should be specified if `SEND_REPORT_NEWOPENPORTS_TELEGRAM` is "true". Example: "-1234567890"
 
 ---
 apiVersion: batch/v1
